@@ -11,7 +11,7 @@ $ make mus _NO_CONSOLE=ON
 
 ## Gallery
 ![Screenshot 1](screenshots/1.png)<br/>
-_mus with some tracks in playlist_
+_mus with some tracks in the playlist_
 
 ## Thanks to
 - @raysan5 for the amazing raylib library
