@@ -10,8 +10,7 @@ $ make mus _NO_CONSOLE=ON
 ```
 
 ## Gallery
-![Screenshot 1](screenshots/1.png)
-
+![Screenshot 1](screenshots/1.png)<br/>
 _mus with some tracks in playlist_
 
 ## Thanks to
