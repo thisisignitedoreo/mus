@@ -17,5 +17,5 @@ _mus with some tracks in the playlist_
 - @raysan5 for the amazing raylib library
 - @larsbs for ID3v2lib
 - @daleonov for a fork of ID3v2lib with some fixes
-- @notofonts for a font for this app
+- @googlefonts for a font for this app (OpenSans)
 - @google for all the icons for this app
