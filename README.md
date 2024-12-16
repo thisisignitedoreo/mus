@@ -3,14 +3,14 @@
 Simple, from-scratch music player written in c99 and raylib
 
 ## Quickstart
-```console
+```shell
 $ python bundle.py
 $ make mus _NO_CONSOLE=ON
 # NOTE: you can omit _NO_CONSOLE flag to enable debug console
 ```
 
 ## Gallery
-![screenshots/1.png](Screenshot 1)
+!(screenshots/1.png)[Screenshot 1]
 _mus with some tracks in playlist_
 
 ## Thanks to
