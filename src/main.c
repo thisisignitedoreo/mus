@@ -52,6 +52,7 @@ Font load_font(char* ptr, size_t size) {
 int main(void) {
     SetConfigFlags(FLAG_MSAA_4X_HINT);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+    SetConfigFlags(FLAG_WINDOW_ALWAYS_RUN);
     InitWindow(500, 400, "mus");
     SetExitKey(0);
     
