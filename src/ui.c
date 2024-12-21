@@ -356,20 +356,25 @@ int album_cards_scroll = 0;
 
 void draw_albums() {
     Rectangle drawbox = get_draw_box();
-    if (album_selected == -1) {
-        size_t row = 0, column = 0;
-        for (size_t i = 0; i < da_length(albums); i++) {
-            if (font_size*7.f*column + font_size*7.f > drawbox.width) { column = 0; row++; }
-            if (font_size/2 + font_size*10.f*row + album_cards_scroll + font_size*9.f < 0) { column++; continue; }
-            if (font_size/2 + font_size*10.f*row + album_cards_scroll > drawbox.height) break;
-            draw_box((Rectangle) {font_size/2 + font_size*7.f*column, font_size/2 + font_size*10.f*row + album_cards_scroll, font_size*6.5f,font_size*9.f});
-            draw_album_card(i, drawbox);
-            drop_draw_box();
-            column++;
+    if (da_length(albums) == 1) {
+        draw_text_box("drag-n-drop a folder here to scan it", (Vector2) {drawbox.width/2, drawbox.height/2}, theme.mg_on);
+    }
+    else {
+        if (album_selected == -1) {
+            size_t row = 0, column = 0;
+            for (size_t i = 0; i < da_length(albums); i++) {
+                if (font_size*7.f*column + font_size*7.f > drawbox.width) { column = 0; row++; }
+                if (font_size/2 + font_size*10.f*row + album_cards_scroll + font_size*9.f < 0) { column++; continue; }
+                if (font_size/2 + font_size*10.f*row + album_cards_scroll > drawbox.height) break;
+                draw_box((Rectangle) {font_size/2 + font_size*7.f*column, font_size/2 + font_size*10.f*row + album_cards_scroll, font_size*6.5f,font_size*9.f});
+                draw_album_card(i, drawbox);
+                drop_draw_box();
+                column++;
+            }
+            if (is_mouse_in_drawbox() && font_size*10.f*row + font_size*9.5f > drawbox.height) album_cards_scroll = -clamp(-album_cards_scroll - GetMouseWheelMove()*scroll_factor, 0.f, font_size*10.f*row + font_size*9.5f - drawbox.height);
+        } else {
+            draw_selected_album();
         }
-        if (is_mouse_in_drawbox() && font_size*10.f*row + font_size*9.5f > drawbox.height) album_cards_scroll = -clamp(-album_cards_scroll - GetMouseWheelMove()*scroll_factor, 0.f, font_size*10.f*row + font_size*9.5f - drawbox.height);
-    } else {
-        draw_selected_album();
     }
 }
 
