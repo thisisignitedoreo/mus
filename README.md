@@ -13,6 +13,9 @@ $ make mus _NO_CONSOLE=ON
 ![Screenshot 1](screenshots/1.png)<br/>
 _mus with some tracks in the playlist_
 
+![Screenshot 2](screenshots/2.png)<br/>
+_mus with opened album page_
+
 ## Thanks to
 - @raysan5 for the amazing raylib library
 - @larsbs for ID3v2lib
