@@ -19,6 +19,7 @@ typedef struct {
     char* artists;
     char* genres;
     Texture cover;
+    Image cover_image;
     int year;
     char** playlist;
 } Album;
@@ -38,14 +39,14 @@ void pop_album() {
     free(albums[index].genres);
     free(albums[index].artists);
     UnloadTexture(albums[index].cover);
-    da_free(albums);
+    UnloadImage(albums[index].cover_image);
+    da_pop(albums, NULL);
 }
 
 char* music_string_from_textframe(ID3v2_TextFrame* data) {
     if (data == NULL) return "";
     char* str;
-    if (data->data->encoding == 1) str = utf162utf8(data->data->text);
-    else str = data->data->text;
+    if (data->data->encoding == 1) str = utf162utf8(data->data->text);    else str = data->data->text;
     return str;
 }
 
@@ -126,8 +127,9 @@ void album_new(char* name, char* path) {
     char* mgenres  = malloc(strlen(name)    + 1); memcpy(mgenres,  genres,  strlen(genres)  + 1);
     Image cover = music_get_cover_from_path(path);
     //Image cover = GenImageColor(64, 64, theme.fg);
+    Image cover_copy = ImageCopy(cover);
     ImageResize(&cover, font_size*6.f, font_size*6.f);
-    Album a = {.name = mname, .artists = martists, .genres = mgenres, .cover = LoadTextureFromImage(cover), .year = music_get_year_from_path(path), .playlist = da_new(char*)};
+    Album a = {.name = mname, .artists = martists, .genres = mgenres, .cover_image = cover_copy, .cover = LoadTextureFromImage(cover), .year = music_get_year_from_path(path), .playlist = da_new(char*)};
     UnloadImage(cover);
     da_push(albums, a);
 }

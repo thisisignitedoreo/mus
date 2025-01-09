@@ -58,6 +58,7 @@ char* to_utf8(char *path) {
 
 #include "music.c"
 #include "ui.c"
+#include "config.c"
 
 Font load_font(char* ptr, size_t size) {
     int codepoints[516] = {0};
@@ -141,6 +142,8 @@ int main(void) {
     UnloadImage(empty_cover);
     da_push(albums, empty_album);
 
+    if (FileExists(".mus-savestate")) config_load();
+
     SetTargetFPS(60);
     
     while (!WindowShouldClose()) {
@@ -189,6 +192,8 @@ int main(void) {
     UnloadTexture(go_back);
 
     CloseWindow();
+
+    config_save();
     
     while (da_length(albums) != 0) pop_album();
     

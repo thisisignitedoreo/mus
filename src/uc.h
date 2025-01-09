@@ -76,10 +76,16 @@ char uc_write_utf8_bom(char* dst);
 // char* dst: destination buffer (writes 3 bytes to it)
 // returns: number of bytes written (3)
 
-char uc_write_utf8_bom(char* dst);
-// Writes UTF8 BOM marker to dst.
-// char* dst: destination buffer (writes 3 bytes to it)
-// returns: number of bytes written (3)
+char uc_read_utf8_bom(char* src);
+// Reads UTF8 BOM marker from src.
+// char* src: destination buffer (reads 3 bytes from it)
+// returns: number of bytes read (3)
+
+char uc_write_utf16_bom(char* dst, char byteorder);
+// Write UTF16 BOM marker to dst
+// char* dst: source buffer (reads 2 bytes from it)
+// char byteorder: byteorder of the BOM
+// returns: amount of bytes written (4)
 
 char uc_read_utf16_bom(char* src, char* bytes_read);
 // Reads UTF16 BOM marker from src
@@ -162,39 +168,39 @@ uint32_t uc_read_utf8_codepoint(char* src, char* read_bytes) {
     *read_bytes = 1;
     if (src[0] < 0x7F) return (uint32_t) src[0];
     *read_bytes = 2;
-    if (src[0] & 0b11100000 == 0b11000000)
+    if ((src[0] & 0b11100000) == 0b11000000)
         return ((uint32_t) (src[0] & 0b11111) << 6) | ((uint32_t) (src[1] & 0b111111));
     *read_bytes = 3;
-    if (src[0] & 0b11110000 == 0b11100000)
-        return ((uint32_t) (src[0] & 0b1111) << 12) | ((uint32_t) (src[1] & 0b111111) << 6) | ((uint32_t) ((src[2] & 0b111111));
+    if ((src[0] & 0b11110000) == 0b11100000)
+        return ((uint32_t) (src[0] & 0b1111) << 12) | ((uint32_t) (src[1] & 0b111111) << 6) | ((uint32_t) ((src[2] & 0b111111)));
     *read_bytes = 4;
-    return ((uint32_t) (src[0] & 0b111) << 18) | ((uint32_t) (src[1] & 0b111111) << 12) | ((uint32_t) (src[2] & 0b111111) << 6) | ((uint32_t) ((src[3] & 0b111111));
+    return ((uint32_t) (src[0] & 0b111) << 18) | ((uint32_t) (src[1] & 0b111111) << 12) | ((uint32_t) (src[2] & 0b111111) << 6) | ((uint32_t) (src[3] & 0b111111));
 }
 
 char uc_write_utf16_codepoint(char* dst, uint32_t codepoint, char byteorder) {
     if (codepoint < 0x10000) {
         if (byteorder == UC_BYTE_ORDER_LITTLE) {
-            src[0] = (codepoint >> 0) & 0xFF;
-            src[1] = (codepoint >> 8) & 0xFF;
+            dst[0] = (codepoint >> 0) & 0xFF;
+            dst[1] = (codepoint >> 8) & 0xFF;
         } else {
-            src[1] = (codepoint >> 0) & 0xFF;
-            src[0] = (codepoint >> 8) & 0xFF;
+            dst[1] = (codepoint >> 0) & 0xFF;
+            dst[0] = (codepoint >> 8) & 0xFF;
         }
         return 2;
     } else {
         codepoint = codepoint - 0x10000;
-        uint16_t lo10 = 0xDC00 | (code & 0x3FF);
-        uint16_t hi10 = 0xD800 | (code >> 10);
+        uint16_t lo10 = 0xDC00 | (codepoint & 0x3FF);
+        uint16_t hi10 = 0xD800 | (codepoint >> 10);
         if (byteorder == UC_BYTE_ORDER_LITTLE) {
-            src[0] = (hi10 >> 0) & 0xFF;
-            src[1] = (hi10 >> 8) & 0xFF;
-            src[2] = (lo10 >> 0) & 0xFF;
-            src[3] = (lo10 >> 8) & 0xFF;
+            dst[0] = (hi10 >> 0) & 0xFF;
+            dst[1] = (hi10 >> 8) & 0xFF;
+            dst[2] = (lo10 >> 0) & 0xFF;
+            dst[3] = (lo10 >> 8) & 0xFF;
         } else {
-            src[1] = (hi10 >> 0) & 0xFF;
-            src[0] = (hi10 >> 8) & 0xFF;
-            src[3] = (lo10 >> 0) & 0xFF;
-            src[2] = (lo10 >> 8) & 0xFF;
+            dst[1] = (hi10 >> 0) & 0xFF;
+            dst[0] = (hi10 >> 8) & 0xFF;
+            dst[3] = (lo10 >> 0) & 0xFF;
+            dst[2] = (lo10 >> 8) & 0xFF;
         }
         return 4;
     }
@@ -226,8 +232,8 @@ char uc_write_utf8_bom(char* dst) {
     return uc_write_utf8_codepoint(dst, 0xFEFF);
 }
 
-char uc_write_utf16_bom(char* dst) {
-    return uc_write_utf16_codepoint(dst, 0xFEFF);
+char uc_write_utf16_bom(char* dst, char endianness) {
+    return uc_write_utf16_codepoint(dst, 0xFEFF, endianness);
 }
 
 char uc_read_utf8_bom(char* dst) {
