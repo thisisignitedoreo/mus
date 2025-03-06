@@ -1,4 +1,7 @@
 
+> [!WARNING]
+> This software was rewritten and this version is abandoned. Visit [mus2](https://github.com/thisisignitedoreo/mus2) for more info.
+
 # mus
 Simple, from-scratch music player written in c99 and raylib
 
